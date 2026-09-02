@@ -1,0 +1,74 @@
+<template>
+    <div class="content-card">
+        <div class="card-header">
+            <div class="card-icon">
+                <lightning-icon icon-name="utility:chat" alternative-text="Deployment" size="medium"></lightning-icon>
+            </div>
+            <div>
+                <h1 class="card-title">Choose an Embedded Service Deployment</h1>
+                <p class="card-subtitle">Select the Embedded Service Deployment that will host your Adaptive Web Agent. This provides the messaging endpoint and authentication.</p>
+            </div>
+        </div>
+
+        <template if:true={loading}>
+            <div class="loading-state slds-m-top_medium">
+                <lightning-spinner alternative-text="Loading deployments" size="small"></lightning-spinner>
+                <p class="slds-m-top_small">Loading deployments...</p>
+            </div>
+        </template>
+
+        <template if:true={error}>
+            <div class="error-banner slds-m-top_medium">
+                <lightning-icon icon-name="utility:error" size="x-small" alternative-text="Error"></lightning-icon>
+                <span>{error}</span>
+            </div>
+        </template>
+
+        <template if:false={loading}>
+            <template if:false={error}>
+                <lightning-combobox
+                    label="Embedded Service Deployment"
+                    placeholder="Select a deployment"
+                    value={selectedId}
+                    options={deploymentOptions}
+                    onchange={handleChange}
+                    class="slds-m-top_medium">
+                </lightning-combobox>
+
+                <!-- Detail card -->
+                <template if:true={hasSelection}>
+                    <div class="detail-card slds-m-top_medium">
+                        <div class="detail-row">
+                            <span class="detail-label">Label</span>
+                            <span class="detail-value">{detailLabel}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Developer Name</span>
+                            <span class="detail-value">{detailDevName}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Full Name</span>
+                            <span class="detail-value">{detailFullName}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Site URL</span>
+                            <span class="detail-value url-value">{detailSiteUrl}</span>
+                        </div>
+                    </div>
+                </template>
+
+                <div class="card-actions slds-m-top_large">
+                    <lightning-button label="Back" onclick={handleBack}></lightning-button>
+                    <lightning-button
+                        variant="brand"
+                        label="Next"
+                        icon-name="utility:forward"
+                        icon-position="right"
+                        onclick={handleNext}
+                        disabled={isNextDisabled}>
+                    </lightning-button>
+                </div>
+            </template>
+        </template>
+    </div>
+</template>

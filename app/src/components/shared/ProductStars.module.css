@@ -1,0 +1,91 @@
+.productRating {
+  display: flex;
+  gap: 1px;
+  line-height: 1;
+  align-items: center;
+}
+
+.small {
+  font-size: 14px;
+  height: 16px;
+}
+
+.large {
+  font-size: 16px;
+  height: 20px;
+}
+
+.star {
+  display: inline-block;
+  color: #097fb3;
+  line-height: 1;
+}
+
+.small .star {
+  font-size: 14px;
+}
+
+.large .star {
+  font-size: 16px;
+}
+
+.starFull {
+  color: #097fb3;
+}
+
+.starHalf {
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+}
+
+.small .starHalf {
+  width: 14px;
+  height: 14px;
+}
+
+.large .starHalf {
+  width: 16px;
+  height: 16px;
+}
+
+.starHalfFilled {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 50%;
+  overflow: hidden;
+  color: #097fb3;
+  line-height: 1;
+}
+
+.small .starHalfFilled {
+  font-size: 14px;
+}
+
+.large .starHalfFilled {
+  font-size: 16px;
+}
+
+.starHalfEmpty {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  color: #e0e0e0;
+  line-height: 1;
+  z-index: -1;
+}
+
+.small .starHalfEmpty {
+  font-size: 14px;
+}
+
+.large .starHalfEmpty {
+  font-size: 16px;
+}
+
+.starEmpty {
+  color: #e0e0e0;
+}
+

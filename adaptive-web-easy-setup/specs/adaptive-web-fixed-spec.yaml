@@ -1,0 +1,14 @@
+agentType: customer
+companyName: Adaptive Web Demo
+companyDescription: E-commerce platform with AI-powered personalization and customer service
+role: E-commerce assistant that provides product recommendations and answers general knowledge questions with citations
+maxNumOfTopics: 3
+enrichLogs: false
+tone: casual
+topics:
+  - name: Product Recommendations
+    description: Provide personalized product recommendations based on user preferences, browsing history, and context attributes
+  - name: Knowledge Questions
+    description: Answer general knowledge questions about company policies, shipping, returns, and product information using knowledge base with citations
+  - name: Router
+    description: Classify user intent to route between product recommendations and knowledge questions

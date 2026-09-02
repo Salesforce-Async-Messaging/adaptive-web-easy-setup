@@ -1,0 +1,22 @@
+<template>
+    <div class="app">
+        <template lwc:if={isReady}>
+            <c-search-bar 
+                show={showSearchBar} 
+                oninitialmessage={handleInitialMessage}
+                ontogglemaximize={handleToggleMaximize}>
+            </c-search-bar>
+            <div class={conversationWrapperClass}>
+                <c-header 
+                    show={showChatBot}
+                    ontoggleminimize={handleToggleMinimize}
+                    oncloseconversation={handleCloseConversationUI}>
+                </c-header>
+                <div class="conversation-container">
+                    <c-chat-bot show={showChatBot}></c-chat-bot>
+                    <c-content-zone show={showChatBot}></c-content-zone>
+                </div>
+            </div>
+        </template>
+    </div>
+</template>

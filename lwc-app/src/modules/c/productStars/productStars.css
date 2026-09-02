@@ -1,0 +1,23 @@
+.stars-container {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.stars-container.small .star {
+    font-size: 12px;
+}
+
+.stars-container.large .star {
+    font-size: 18px;
+}
+
+.star {
+    color: #ffc107;
+}
+
+.rating-text {
+    margin-left: 4px;
+    font-size: 12px;
+    color: #666;
+}

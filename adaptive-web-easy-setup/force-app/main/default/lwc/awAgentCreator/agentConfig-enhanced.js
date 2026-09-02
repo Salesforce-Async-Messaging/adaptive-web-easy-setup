@@ -1,0 +1,412 @@
+const PROMPT_CONTENT =
+`## ROLE
+You are a product personalization router. Your only output is a valid JSON object — no explanations, no text outside the JSON.
+
+## INPUTS
+
+### User Query
+"{!$Input:user_query}"
+
+### Available Personalization Points (from org)
+{!$Input:personalizationPoints}
+
+### Available Dynamic Context Values (from product catalog)
+Columns: e.g., color, category, etc. (from ssot_GoodsProduct DMO)
+{!$Input:dynamic_context_values}
+
+## TASK
+Follow these steps in order:
+
+1. Identify the customer's intent from the User Query above.
+2. Determine which dynamicContextAttributes, if any, are relevant to the intent:
+ - Only use values that exist in the Available Dynamic Context Values — no paraphrasing.
+ - If no attributes are relevant, dynamicContextAttributes should be empty {}.
+3. Look at the Available Personalization Points and the description and decide which personalization point best matches the query intent.
+ - Choose the DeveloperName (or API name) of the most relevant PersonalizationPoint.
+ - Always choose a personalization point
+4. Return only the JSON object defined in the Output Schema below. Nothing else.
+
+## OUTPUT SCHEMA
+Return exactly this JSON structure. The block must start with \`\`\`JSON and end with \`\`\`.
+
+\`\`\`JSON
+{
+ "text": "<short conversational reply acknowledging the customer's request>",
+ "personalizationPoint": "<DeveloperName of PersonalizationPoint | unknown>",
+ "dynamicContextAttributes": {<key value pairs of dynamic context attributes>}
+}
+\`\`\`
+
+## CONSTRAINTS
+- Do not use any external data. Answer based on intent and the provided inputs only.
+- "text" must be friendly and concise. Do not mention "catalog" or "personalization point."
+- "personalizationPoint" must be the exact DeveloperName of a PersonalizationPoint from the input, or "unknown".
+- "dynamicContextAttributes" must only contain keys from the dynamic context values input when relevant. Omit keys that are not relevant. Use exact values from the Available Dynamic Context Values.
+- Output must be valid, parseable JSON. Nothing before \`\`\`JSON, nothing after \`\`\`.
+
+## EXAMPLES
+
+Input: "Show me red jackets"
+Available Personalization Points: [{"DeveloperName": "Product_Recs", "Label": "Product Recommendations"}]
+Available Dynamic Context Values: {"colors": ["Red", "Blue", "Green"], "categories": ["Shoes", "Jackets &amp; Vests", "Hats"]}
+\`\`\`JSON
+{
+ "text": "Here are our red products for you.",
+ "personalizationPoint": "Product_Recs",
+ "dynamicContextAttributes": {
+ "color": "Red",
+ "category": "Jackets &amp; Vests"
+ }
+}
+\`\`\`
+
+Input: "I'm just browsing"
+Available Personalization Points: [{"DeveloperName": "Product_Recs"}]
+Available Dynamic Context Values: {"color": ["Red"], "material": ["Steel"]}
+\`\`\`JSON
+{
+ "text": "I'd love to help you browse. What kind of products are you interested in?",
+ "personalizationPoint": "Product_Recs",
+ "dynamicContextAttributes": {}
+}
+\`\`\``;
+
+export const agentConfig = {
+    description: 'Routes product queries to personalization and answers general questions using knowledge base with citations.',
+    role: 'Help customers discover products and answer questions about our services.',
+
+    messages: {
+        welcome: 'Hi! I can help you discover products or answer questions. What can I help you with?',
+        error: "I'm sorry, something went wrong. Please try again.",
+    },
+
+    system: {
+        instructions: "You are a helpful assistant for product discovery and general questions.\nFor product queries, route to personalized recommendations.\nFor general questions, search the knowledge base and provide answers with sources.",
+    },
+
+    prompt: {
+        description: 'Evaluates which personalization point should be used given a user query and dynamic context values.',
+        masterLabel: 'Choose Personalization Point',
+        content: PROMPT_CONTENT,
+        type: 'einstein_gpt__flex',
+        visibility: 'Global',
+        model: 'sfdc_ai__DefaultOpenAIGPT4OmniMini',
+        responseFormat: 'JSON',
+        inputs: [
+            { apiName: 'user_query', label: 'user_query', required: true },
+            { apiName: 'personalizationPoints', label: 'personalizationPoints', required: true },
+            { apiName: 'dynamic_context_values', label: 'dynamic_context_values', required: true },
+        ],
+    },
+
+    variables: [
+        // Existing personalization variables
+        { name: 'personalization_points', dataType: 'Text', yamlType: 'string', yamlDefault: '""', description: 'Personalization Points' },
+        { name: 'personalization_points_loaded', dataType: 'Boolean', yamlType: 'boolean', yamlDefault: 'False', description: 'Personalization Points Loaded' },
+        { name: 'dynamic_context_values', dataType: 'Text', yamlType: 'string', yamlDefault: '""', description: 'Dynamic Context Values' },
+        { name: 'dynamic_context_loaded', dataType: 'Boolean', yamlType: 'boolean', yamlDefault: 'False', description: 'Dynamic Context Loaded' },
+        { name: 'choose_personalization_point_response', dataType: 'Text', yamlType: 'string', yamlDefault: '""', description: 'Choose Personalization Point Response' },
+
+        // NEW: Knowledge and citation variables
+        { name: 'last_knowledge_answer', dataType: 'Text', yamlType: 'string', yamlDefault: '""', description: 'Last Knowledge Answer' },
+        { name: 'last_citation_sources', dataType: 'Text', yamlType: 'string', yamlDefault: '""', description: 'Last Citation Sources JSON' },
+        { name: 'rag_feature_config_id', dataType: 'Text', yamlType: 'string', yamlDefault: '""', description: 'RAG Feature Config ID for retriever' },
+    ],
+
+    topics: [
+        {
+            localName: 'topic_router',
+            label: 'Topic Router',
+            description: 'Classifies user queries and routes to appropriate topic (product discovery or general questions)',
+            isStart: true,
+            canEscalate: false,
+            instructions: "Analyze the user's query and determine intent:\n\n- PRODUCT QUERY: User is looking for product recommendations, browsing products, asking about specific products, or filtering by attributes (color, category, price, etc.) → Route to Personalization_Recommender\n\n- GENERAL QUESTION: User is asking about policies, company info, how-to guides, support, or general knowledge → Route to Knowledge_Assistant\n\n- AMBIGUOUS: Not clear what they want → Ask clarifying question: 'Are you looking for products, or do you have a question about our services?'",
+            actionLinks: [],
+        },
+        {
+            localName: 'Personalization_Recommender',
+            label: 'Personalization Recommender',
+            description: "Handles product discovery by determining the intent of the user's message and returns the best personalization point and any relevant dynamic context attributes.",
+            isStart: false,
+            canEscalate: false,
+            instructions: "You are a product discovery assistant. Route the customer's query to personalized product recommendations.\nAcknowledge their request and let them know you're fetching relevant products.",
+            actionLinks: ['get_dynamic_context_values', 'choose_personalization_point', 'get_personalization_points'],
+        },
+        {
+            localName: 'Knowledge_Assistant',
+            label: 'Knowledge Assistant',
+            description: 'Answers general questions using Salesforce Knowledge with citations from custom Apex retriever',
+            isStart: false,
+            canEscalate: false,
+            instructions: "You are a helpful assistant that answers questions using our knowledge base.\n\nWhen a user asks a question:\n1. Search the knowledge base using Answer Questions with Knowledge action\n2. Fetch citations using Get Citations action\n3. Provide a clear, concise answer\n4. Include citations inline AND as a footer (hybrid format)\n5. If no knowledge found, say: \"I couldn't find information on that. Would you like to browse products instead?\"\n\nCitation format (hybrid):\n- Inline: Mention sources naturally in your answer\n- Footer: List all sources at the end\n\nExample:\n\"Based on our return policy [1], you can return items within 30 days. For more details, see our shipping guidelines [2].\n\nSources:\n1. Return Policy Guide\n2. Shipping and Returns FAQ\"",
+            actionLinks: ['answer_with_knowledge', 'get_citations_from_knowledge'],
+        },
+    ],
+
+    actions: [
+        // Existing personalization actions
+        {
+            localName: 'get_personalization_points',
+            label: 'Get Personalization Points',
+            description: 'Query all PersonalizationPoint records in the org.',
+            target: 'GetPersonalizationPoints',
+            targetType: 'apex',
+            confirmationRequired: false,
+            progressIndicator: false,
+            inputs: [
+                { apiName: 'requests', label: 'requests', type: 'string', required: false, isUserInput: false },
+            ],
+            outputs: [
+                { apiName: 'personalizationPoints', label: 'Personalization Points', type: 'string', description: '', filterFromAgent: false, displayable: false },
+            ],
+        },
+        {
+            localName: 'get_dynamic_context_values',
+            label: 'Get Dynamic Context Values',
+            description: 'Get distinct values for various columns from ssot_GoodsProduct DMO.',
+            target: 'GetDynamicContextValues',
+            targetType: 'apex',
+            confirmationRequired: false,
+            progressIndicator: false,
+            inputs: [
+                { apiName: 'requests', label: 'requests', type: 'string', required: false, isUserInput: false },
+            ],
+            outputs: [
+                { apiName: 'dynamicContextValues', label: 'Dynamic Context Values', type: 'string', description: 'Key value pair of potential values to include with the response to the {!@choose_personalization_point} action based on the user\'s query intent', filterFromAgent: false, displayable: false },
+            ],
+        },
+        {
+            localName: 'choose_personalization_point',
+            label: 'Choose Personalization Point',
+            description: 'Derive query intent, select relevant dynamicContextAttributes from the query intent, evaluate the given personalization points data and pick the most relevant one. There can be multiple dynamicContextAttributes. Always return a single personalization point. Return JSON.',
+            targetType: 'generatePromptResponse',
+            confirmationRequired: false,
+            progressIndicator: false,
+            inputs: [
+                { apiName: 'Input:user_query', label: 'user_query', type: 'string', required: true, isUserInput: false },
+                { apiName: 'Input:personalizationPoints', label: 'personalization_points', type: 'string', required: true, isUserInput: false },
+                { apiName: 'Input:dynamic_context_values', label: 'dynamic_context_values', type: 'string', required: true, isUserInput: false },
+            ],
+            outputs: [
+                { apiName: 'promptResponse', label: 'Prompt Response', type: 'string', description: 'The prompt response generated by the action based on the specified prompt and input.', filterFromAgent: false, displayable: true },
+            ],
+        },
+
+        // NEW: Knowledge actions
+        {
+            localName: 'answer_with_knowledge',
+            label: 'Answer Questions with Knowledge',
+            description: 'Search Salesforce Knowledge and return answer (standard action)',
+            target: 'AnswerQuestionsWithKnowledge',
+            targetType: 'standard',
+            confirmationRequired: false,
+            progressIndicator: false,
+            inputs: [
+                { apiName: 'question', label: 'User Question', type: 'string', required: true, isUserInput: false },
+            ],
+            outputs: [
+                { apiName: 'answer', label: 'Knowledge Answer', type: 'string', description: 'Answer text from knowledge base', filterFromAgent: false, displayable: true },
+            ],
+        },
+        {
+            localName: 'get_citations_from_knowledge',
+            label: 'Get Citations From Knowledge',
+            description: 'Fetch citation sources for a knowledge query using custom Apex workaround',
+            target: 'GetKnowledgeCitations',
+            targetType: 'apex',
+            confirmationRequired: false,
+            progressIndicator: false,
+            inputs: [
+                { apiName: 'query', label: 'Search Query', type: 'string', required: true, isUserInput: false },
+                { apiName: 'ragFeatureConfigId', label: 'RAG Feature Config ID', type: 'string', required: true, isUserInput: false },
+            ],
+            outputs: [
+                { apiName: 'citationSources', label: 'Citation Sources', type: 'string', description: 'JSON array of citation objects with id, url, title, snippet', filterFromAgent: false, displayable: true },
+            ],
+        },
+    ],
+
+    planner: {
+        surfaces: [
+            { surface: 'SurfaceAction__CustomerWebClient', surfaceType: 'CustomerWebClient', adaptiveResponseAllowed: false, callRecordingAllowed: false },
+        ],
+        type: 'Atlas__ConcurrentMultiAgentOrchestration',
+    },
+
+    bot: {
+        type: 'ExternalCopilot',
+        agentType: 'AgentforceServiceAgent',
+        toneType: 'Casual',
+    },
+
+    getAgentYaml(agentName, promptName, botUserUsername) {
+        return `system:
+  instructions: |
+    ${this.system.instructions.replace(/\n/g, '\n    ')}
+  messages:
+    welcome: "${this.messages.welcome}"
+    error: "${this.messages.error}"
+
+config:
+    developer_name: "${agentName}"
+    description: "${this.description}"
+    role: "${this.role}"
+    default_agent_user: "${botUserUsername}"
+
+variables:
+${this.variables.map(v => `  ${v.name}: mutable ${v.yamlType} = ${v.yamlDefault}`).join('\n')}
+
+start_agent topic_router:
+    label: "Topic Router"
+    description: "${this.topics[0].description}"
+
+    reasoning:
+        instructions: |
+            ${this.topics[0].instructions.replace(/\n/g, '\n            ')}
+
+        actions:
+            route_to_personalization: @utils.transition to @topic.Personalization_Recommender
+            route_to_knowledge: @utils.transition to @topic.Knowledge_Assistant
+
+topic Personalization_Recommender:
+    description: "${this.topics[1].description}"
+
+    reasoning:
+        instructions: ->
+            | Acknowledge the customer's request and let them know you're fetching content.
+              If the customer is asking for product recommendations or for information about products, choose a personalization point.
+              After loading points/context, call {!@actions.choose_personalization_point} with the user query and loaded variables.
+              ALWAYS RETURN THE EXACT JSON FROM THE {!@actions.choose_personalization_point} action! RETURN THE ENTIRE promptResponse variable to the user.
+            if @variables.personalization_points_loaded == False:
+                run @actions.get_personalization_points
+                    set @variables.personalization_points = @outputs.personalizationPoints
+                    set @variables.personalization_points_loaded = True
+            if @variables.dynamic_context_loaded == False:
+                run @actions.get_dynamic_context_values
+                    set @variables.dynamic_context_values = @outputs.dynamicContextValues
+                    set @variables.dynamic_context_loaded = True
+
+        actions:
+            choose_personalization_point: @actions.choose_personalization_point
+                with "Input:user_query" = @system_variables.user_input
+                with "Input:personalizationPoints" = @variables.personalization_points
+                with "Input:dynamic_context_values" = @variables.dynamic_context_values
+
+    actions:
+        get_personalization_points:
+          description: "${this.actions[0].description}"
+          inputs:
+            requests: string
+              label: "requests"
+              is_required: False
+              is_user_input: False
+          outputs:
+            personalizationPoints: string
+              label: "Personalization Points"
+              filter_from_agent: False
+              is_displayable: False
+          target: "apex://GetPersonalizationPoints"
+          label: "Get Personalization Points"
+
+        get_dynamic_context_values:
+          description: "${this.actions[1].description}"
+          inputs:
+            requests: string
+              label: "requests"
+              is_required: False
+              is_user_input: False
+          outputs:
+            dynamicContextValues: string
+              description: "${this.actions[1].outputs[0].description}"
+              label: "Dynamic Context Values"
+              filter_from_agent: False
+              is_displayable: False
+          target: "apex://GetDynamicContextValues"
+          label: "Get Dynamic Context Values"
+          require_user_confirmation: False
+          include_in_progress_indicator: False
+
+        choose_personalization_point:
+          description: "${this.actions[2].description}"
+          inputs:
+            "Input:user_query": string
+              label: "user_query"
+              is_required: True
+              is_user_input: False
+            "Input:personalizationPoints": string
+              label: "personalization_points"
+              is_required: True
+              is_user_input: False
+            "Input:dynamic_context_values": string
+              label: "dynamic_context_values"
+              is_required: True
+              is_user_input: False
+          outputs:
+            promptResponse: string
+              description: "${this.actions[2].outputs[0].description}"
+              label: "Prompt Response"
+              filter_from_agent: False
+              is_displayable: True
+          target: "generatePromptResponse://${promptName}"
+          label: "Choose Personalization Point"
+
+topic Knowledge_Assistant:
+    label: "Knowledge Assistant"
+    description: "${this.topics[2].description}"
+
+    reasoning:
+        instructions: |
+            ${this.topics[2].instructions.replace(/\n/g, '\n            ')}
+
+        actions:
+            answer_question: @actions.answer_with_knowledge
+                with question = @system_variables.user_input
+            get_citations: @actions.get_citations_from_knowledge
+                with query = @system_variables.user_input
+                with ragFeatureConfigId = @variables.rag_feature_config_id
+
+    actions:
+        answer_with_knowledge:
+          description: "${this.actions[3].description}"
+          inputs:
+            question: string
+              label: "User Question"
+              is_required: True
+              is_user_input: False
+          outputs:
+            answer: string
+              label: "Knowledge Answer"
+              filter_from_agent: False
+              is_displayable: True
+          target: "standard://AnswerQuestionsWithKnowledge"
+          label: "Answer Questions with Knowledge"
+          require_user_confirmation: False
+          include_in_progress_indicator: False
+
+        get_citations_from_knowledge:
+          description: "${this.actions[4].description}"
+          inputs:
+            query: string
+              label: "Search Query"
+              is_required: True
+              is_user_input: False
+            ragFeatureConfigId: string
+              label: "RAG Feature Config ID"
+              is_required: True
+              is_user_input: False
+          outputs:
+            citationSources: string
+              label: "Citation Sources"
+              description: "JSON array of citation objects"
+              filter_from_agent: False
+              is_displayable: True
+          target: "apex://GetKnowledgeCitations"
+          label: "Get Citations From Knowledge"
+          require_user_confirmation: False
+          include_in_progress_indicator: False
+
+connection customer_web_client:
+    adaptive_response_allowed: False
+`;
+    },
+};

@@ -1,0 +1,24 @@
+<template>
+    <div class="recs-template">
+        <template lwc:if={hasItems}>
+            <div class="items-grid">
+                <template for:each={displayItems} for:item="item">
+                    <div key={item.id} class="item-card">
+                        <template lwc:if={item.hasImage}>
+                            <div class="item-image-container">
+                                <img src={item.image} alt={item.name} />
+                            </div>
+                        </template>
+                        <div class="item-name">{item.name}</div>
+                        <template lwc:if={item.hasSku}>
+                            <div class="item-sku">{item.sku}</div>
+                        </template>
+                        <template lwc:if={item.hasPrice}>
+                            <div class="item-price">{item.formattedPrice}</div>
+                        </template>
+                    </div>
+                </template>
+            </div>
+        </template>
+    </div>
+</template>

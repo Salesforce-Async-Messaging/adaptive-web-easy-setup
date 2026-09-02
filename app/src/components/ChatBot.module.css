@@ -1,0 +1,241 @@
+.chatbotContainer {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 143px);
+  width: 26vw;
+  min-width: 200px;
+  border-top: 2px solid rgba(224, 224, 224, 0.8);
+  border-right: 2px solid rgba(224, 224, 224, 0.8);
+  background: rgba(255, 255, 255);
+  max-height: none;
+  backdrop-filter: blur(10px);
+  pointer-events: auto;
+  animation: dropDown 0.5s ease-out forwards;
+}
+
+@keyframes dropDown {
+  from {
+    transform: translateY(-100vh);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.messagesContainer {
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.message {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: 80%;
+}
+
+.messageUser {
+  align-self: flex-end;
+  flex-direction: row-reverse;
+}
+
+.messageBot {
+  align-self: flex-start;
+}
+
+.agentLogo {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  justify-content: center;
+  align-self: center;
+  border-radius: 50%;
+}
+
+.messageWrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 1rem;
+}
+
+.messageContent {
+  background: #f1f3f4;
+  padding: 12px 16px;
+  position: relative;
+  width: fit-content;
+  color: var(--Text-text-default, #1C1C1C);
+}
+
+.messageUser .messageContent {
+  background: #EEF4FF;
+  align-self: flex-end;
+  border-radius: 15px 15px 0px 15px;
+}
+
+.messageBot .messageContent {
+  background: #F3F3F3;
+  align-self: flex-start;
+  border-radius: 15px 15px 15px 0px;
+}
+
+.messageText {
+  line-height: 1.4;
+  word-wrap: break-word;
+  max-width: 285px;
+}
+
+.messageTimestamp {
+  font-size: 11px;
+  opacity: 0.6;
+  color: var(--Text-Weak, #444);
+  margin-left: 12px;
+  align-self: flex-start;
+}
+
+.messageUser .messageTimestamp {
+  align-self: flex-end;
+  margin-left: 0;
+  margin-right: 12px;
+}
+
+.messageInputForm {
+  border-top: 1px solid #e0e0e0;
+  padding: 16px 20px 16px 16px;
+  background: #393939;
+}
+
+.messageInputContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-bottom: 3px solid #006EBE;
+}
+
+.inputRow {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.textareaContainer {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: flex-end;
+}
+
+.messageInput {
+  flex: 1;
+  padding: 12px 50px 12px 16px;
+  border: 1px solid #ddd;
+  resize: none;
+  font-size: 14px;
+  line-height: 1.4;
+  min-height: 20px;
+  max-height: 120px;
+  overflow-y: auto;
+  font-family: "Source Sans Pro", sans-serif;
+}
+
+.messageInput:focus {
+  outline: none;
+  border-color: #EEF4FF;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+}
+
+.messageChoices {
+  display: flex;
+  width: 280px;
+  flex-direction: column;
+  align-items: flex-end;
+  border-radius: 4px;
+  border: 1px solid #949494;
+  margin-top: 8px; /* Keep small margin from message box */
+  overflow: hidden; /* Ensure child elements don't overflow rounded corners */
+}
+
+.choiceButton {
+  padding: 12px 16px;
+  border: none; /* Remove individual borders since container has border */
+  background: white;
+  color: #333333;
+  border-radius: 0; /* Remove default border radius */
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  text-align: left;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  width: 100%; /* Fill container width */
+  border-bottom: 1px solid #949494; /* Add border between buttons using container color */
+}
+
+.choiceButton:hover {
+  background: #EEF4FF;
+  box-shadow: 0 2px 4px rgba(0, 123, 255, 0.2);
+}
+
+.choiceButton:active {
+  box-shadow: 0 1px 2px rgba(0, 123, 255, 0.2);
+}
+
+.choiceButton.selected {
+  background: #EEF4FF;
+  box-shadow: 0 2px 4px rgba(0, 123, 255, 0.2);
+  cursor: not-allowed;
+  opacity: 0.8;
+}
+
+.choiceButton.selected:hover {
+  background: #EEF4FF; /* Keep same background on hover */
+  box-shadow: 0 2px 4px rgba(0, 123, 255, 0.2); /* Keep same shadow */
+}
+
+.typingIndicator {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 0;
+}
+
+.typingIndicator span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #999;
+  animation: typing 1.4s infinite ease-in-out;
+}
+
+.typingIndicator span:nth-child(1) {
+  animation-delay: -0.32s;
+}
+
+.typingIndicator span:nth-child(2) {
+  animation-delay: -0.16s;
+}
+
+.typingIndicator span:nth-child(3) {
+  animation-delay: 0;
+}
+
+@keyframes typing {
+  0%, 80%, 100% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+

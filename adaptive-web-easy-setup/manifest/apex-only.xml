@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <types>
+        <members>AnswerQuestionsWithKnowledge</members>
+        <members>GetKnowledgeCitations</members>
+        <members>GetPersonalizationPoints</members>
+        <members>GetDynamicContextValues</members>
+        <name>ApexClass</name>
+    </types>
+    <version>66.0</version>
+</Package>

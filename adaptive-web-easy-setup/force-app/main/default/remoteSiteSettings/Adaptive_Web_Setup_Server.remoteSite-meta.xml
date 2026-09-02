@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RemoteSiteSetting xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Allows Apex to call back into this org's REST API for Connect API and Tooling API endpoints</description>
+    <disableProtocolSecurity>false</disableProtocolSecurity>
+    <isActive>true</isActive>
+    <url>https://placeholder.my.salesforce.com</url>
+</RemoteSiteSetting>

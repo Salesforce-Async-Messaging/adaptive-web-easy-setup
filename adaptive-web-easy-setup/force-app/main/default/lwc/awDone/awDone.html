@@ -1,0 +1,130 @@
+<template>
+    <div class="scroll-content">
+        <!-- Next Steps to Push Live -->
+        <div class="setup-section">
+            <h1 class="section-heading">Almost there!</h1>
+            <p class="section-description">The Adaptive Web agent and web connector are created. Activate the deployment, then add the script below to your website to enable the Adaptive Web experience.</p>
+        </div>
+
+        <!-- Info banner about publishing delay -->
+        <div class="warning-banner">
+            <lightning-icon icon-name="utility:info" size="x-small" alternative-text="Info"></lightning-icon>
+            <span>Publishing can take up to 10 minutes. The agent may not respond immediately.</span>
+        </div>
+
+        <!-- Optional: View Deployment -->
+        <div class="step-section">
+            <h2 class="step-title">Deployment Ready. Manual Publishing Required.</h2>
+            <p class="step-description">Click View Deployment to publish the embedded chat component.</p>
+            <template if:true={hasPublishStep}>
+                <a href={publishUrl} target="_blank" rel="noopener noreferrer" class="action-link">
+                    <lightning-icon icon-name="utility:new_window" size="xx-small" alternative-text="Open"></lightning-icon>
+                    <span>View Deployment</span>
+                </a>
+            </template>
+        </div>
+
+        <!-- CDN Script -->
+        <template if:true={hasCdnUrl}>
+            <div class="step-section">
+                <h2 class="step-title">Add the CDN Script to Your Website</h2>
+                <p class="step-description">Click Open Web Connector to add this script to your website to enable the Adaptive Web experience.</p>
+                <div class="cdn-row">
+                    <div class="cdn-code-block">
+                        <code class="cdn-code">{cdnUrl}</code>
+                    </div>
+                    <lightning-button-icon
+                        icon-name="utility:copy_to_clipboard"
+                        alternative-text="Copy to clipboard"
+                        title="Copy"
+                        onclick={handleCopyCdn}>
+                    </lightning-button-icon>
+                </div>
+                <template if:true={webConnectorLabel}>
+                    <a class="action-link" onclick={handleOpenSitemap}>
+                        <lightning-icon icon-name="utility:new_window" size="xx-small" alternative-text="Open"></lightning-icon>
+                        <span>Open Web Connector</span>
+                    </a>
+                </template>
+            </div>
+        </template>
+
+        <!-- Created Object Summary (collapsible, closed by default) -->
+        <div class="setup-section summary-section">
+            <h1 class="section-heading summary-heading">
+                <button type="button" class="summary-toggle" onclick={handleToggleSummary}
+                    aria-expanded={summaryAriaExpanded}>
+                    <lightning-icon icon-name={summaryToggleIcon} size="x-small" alternative-text=""
+                        class="summary-chevron"></lightning-icon>
+                    <span>Created Objects</span>
+                </button>
+            </h1>
+
+            <template if:true={isSummaryExpanded}>
+            <p class="section-description">Review the objects created during setup. Expand to view details.</p>
+
+            <div class="object-list">
+                <template if:true={agentName}>
+                    <div class="object-item">
+                        <span class="object-type">Agent</span>
+                        <template if:true={hasAgentUrl}>
+                            <a href={agentUrl} target="_blank" rel="noopener noreferrer" class="object-name-link">{agentName}</a>
+                        </template>
+                        <template if:false={hasAgentUrl}>
+                            <span class="object-name-text">{agentName}</span>
+                        </template>
+                        <span class="object-desc">Active and ready</span>
+                    </div>
+                </template>
+                <template if:true={webConnectorLabel}>
+                    <div class="object-item">
+                        <span class="object-type">Web Connector</span>
+                        <template if:true={hasWebConnectorUrl}>
+                            <a href={webConnectorUrl} target="_blank" rel="noopener noreferrer" class="object-name-link">{webConnectorLabel}</a>
+                        </template>
+                        <template if:false={hasWebConnectorUrl}>
+                            <span class="object-name-text">{webConnectorLabel}</span>
+                        </template>
+                        <span class="object-desc">Sitemap configured and ready</span>
+                    </div>
+                </template>
+                <template if:true={hasDeploymentInfo}>
+                    <div class="object-item">
+                        <span class="object-type">Enhanced Chat Deployment</span>
+                        <a href={publishUrl} target="_blank" rel="noopener noreferrer" class="object-name-link">{deploymentLabel}</a>
+                        <span class="object-desc">Published and accepting connections</span>
+                    </div>
+                </template>
+                <template if:true={transformerName}>
+                    <div class="object-item">
+                        <span class="object-type">Experience Template</span>
+                        <template if:true={hasTransformerUrl}>
+                            <a href={transformerUrl} target="_blank" rel="noopener noreferrer" class="object-name-link">{transformerName}</a>
+                        </template>
+                        <template if:false={hasTransformerUrl}>
+                            <span class="object-name-text">{transformerName}</span>
+                        </template>
+                        <span class="object-desc">Enabled and ready</span>
+                    </div>
+                </template>
+                <template if:true={pecName}>
+                    <div class="object-item">
+                        <span class="object-type">Personalization Experience Config</span>
+                        <span class="object-name-text">{pecName}</span>
+                        <span class="object-desc">Live for all pages</span>
+                    </div>
+                </template>
+            </div>
+            </template>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="setup-footer">
+        <div class="footer-left">
+            <lightning-button variant="neutral" label="Back" onclick={handleBack}></lightning-button>
+        </div>
+        <div class="footer-right">
+        </div>
+    </div>
+</template>

@@ -1,0 +1,145 @@
+<template>
+    <!-- Hidden VF iframe — posts a REST-capable session token via postMessage -->
+    <iframe src="/apex/GetSessionId" title="session-loader" class="vf-session-frame"></iframe>
+
+    <div class="wizard-layout">
+
+        <!-- Always-visible stage sidebar -->
+        <div class="wizard-sidebar">
+            <ul class="stage-list">
+                <template for:each={wizardStages} for:item="stage">
+                    <li key={stage.id} class={stage.itemClass}>
+                        <div class="stage-marker">
+                            <span class={stage.dotClass}></span>
+                            <template if:false={stage.isLast}>
+                                <span class={stage.lineClass}></span>
+                            </template>
+                        </div>
+                        <span class={stage.labelClass}>{stage.label}</span>
+                    </li>
+                </template>
+            </ul>
+        </div>
+
+        <!-- Main content panel -->
+        <div class="wizard-main">
+
+            <template if:false={isSessionReady}>
+                <div class="session-loading">
+                    <h1 class="session-loading-title">Adaptive Web Setup</h1>
+                </div>
+            </template>
+
+            <template if:true={isSessionReady}>
+
+                <!-- Beta Warning Overlay -->
+                <template if:false={betaAccepted}>
+                    <div class="beta-overlay">
+                        <div class="beta-content">
+                            <div class="beta-illustration">
+                                <lightning-illustration illustration-name="success:selfassigned" alternative-text="Beta experience" size="small"></lightning-illustration>
+                            </div>
+                            <h1 class="beta-title">This is a Beta Experience</h1>
+                            <p class="beta-description">
+                                Adaptive Web Easy Setup is a pilot or beta service that is subject to the Beta Services
+                                Terms at <a href="https://www.salesforce.com/company/legal/agreements/" target="_blank" rel="noopener noreferrer">Agreements - Salesforce</a> or a written Unified Pilot Agreement if executed
+                                by Customer, and applicable terms in the <a href="https://www.salesforce.com/company/legal/agreements/" target="_blank" rel="noopener noreferrer">Product Terms Directory</a>. Use of this pilot or
+                                beta service is at the Customer's sole discretion.
+                            </p>
+                            <button class="beta-accept-btn" onclick={handleAcceptBeta}>Accept Terms</button>
+                        </div>
+                    </div>
+                </template>
+
+                <template if:true={betaAccepted}>
+                <!--
+                    Screens stay mounted once visited — their DOM is preserved
+                    and only display is toggled. This keeps step progress,
+                    checkmarks, and fetched data intact when the user navigates
+                    back.
+                -->
+
+                <!-- Step 0: Personalization Setup Check -->
+                <template if:true={showSetup}>
+                    <div class={setupClass}>
+                        <c-aw-setup-check
+                            session-id={sessionId}
+                            onsetupchecked={handleSetupChecked}>
+                        </c-aw-setup-check>
+                    </div>
+                </template>
+
+                <!-- Step 1: Create Agent -->
+                <template if:true={showAgent}>
+                    <div class={agentClass}>
+                        <c-aw-agent-creator
+                            session-id={sessionId}
+                            onagentcreated={handleAgentCreated}
+                            onback={handleBackToSetup}>
+                        </c-aw-agent-creator>
+                    </div>
+                </template>
+
+                <!-- Step 2a (new users): Auto-provision messaging + ESC + transformer -->
+                <template if:true={showAutoSetup}>
+                    <div class={autoSetupClass}>
+                        <c-aw-auto-setup
+                            session-id={sessionId}
+                            created-agent={createdAgent}
+                            onautosetupcomplete={handleAutoSetupComplete}
+                            onback={handleBackToAgent}>
+                        </c-aw-auto-setup>
+                    </div>
+                </template>
+
+                <!-- Step 2b (existing users): Choose Web Connector -->
+                <template if:true={showSitemap}>
+                    <div class={sitemapClass}>
+                        <c-aw-sitemap-picker
+                            session-id={sessionId}
+                            onsitemapselected={handleSitemapSelected}
+                            onback={handleBackToAutoSetup}>
+                        </c-aw-sitemap-picker>
+                    </div>
+                </template>
+
+                <!-- Step 3 (existing users): Embedded Service Deployment -->
+                <template if:true={showDeployment}>
+                    <div class={deploymentClass}>
+                        <c-aw-deployment-picker
+                            session-id={sessionId}
+                            ondeploymentselected={handleDeploymentSelected}
+                            onback={handleBackToSitemap}>
+                        </c-aw-deployment-picker>
+                    </div>
+                </template>
+
+                <!-- Step 4 (existing users): Deploy -->
+                <template if:true={showDeploy}>
+                    <div class={deployClass}>
+                        <c-aw-deploy-progress
+                            session-id={sessionId}
+                            selected-sitemap={selectedSitemap}
+                            selected-deployment={selectedDeployment}
+                            ondeploycomplete={handleDeployComplete}
+                            onback={handleBackToDeployment}>
+                        </c-aw-deploy-progress>
+                    </div>
+                </template>
+
+                <!-- Done -->
+                <template if:true={showDone}>
+                    <div class={doneClass}>
+                        <c-aw-done
+                            deploy-result={deployResult}
+                            onstartover={handleStartOver}
+                            onback={handleBackFromDone}>
+                        </c-aw-done>
+                    </div>
+                </template>
+
+                </template>
+            </template>
+        </div>
+    </div>
+</template>

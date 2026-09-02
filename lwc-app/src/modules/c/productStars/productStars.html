@@ -1,0 +1,12 @@
+<template>
+    <div class={containerClass}>
+        <template for:each={stars} for:item="star">
+            <span key={star.id} class="star">
+                <template lwc:if={star.isFull}>&#9733;</template>
+                <template lwc:elseif={star.isHalf}>&#9734;</template>
+                <template lwc:else>&#9734;</template>
+            </span>
+        </template>
+        <span class="rating-text">{rating}</span>
+    </div>
+</template>

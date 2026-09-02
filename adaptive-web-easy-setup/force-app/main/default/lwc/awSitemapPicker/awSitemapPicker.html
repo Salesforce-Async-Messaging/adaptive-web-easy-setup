@@ -1,0 +1,64 @@
+<template>
+    <div class="content-card">
+        <div class="card-header">
+            <div class="card-icon">
+                <lightning-icon icon-name="utility:connected_apps" alternative-text="Web Connector" size="medium"></lightning-icon>
+            </div>
+            <div>
+                <h1 class="card-title">Choose a Web Connector</h1>
+                <p class="card-subtitle">Select the Web Connector (External App) to associate with this Adaptive Web setup. A sitemap will be automatically added to the selected connector.</p>
+            </div>
+        </div>
+
+        <template if:true={loading}>
+            <div class="loading-state slds-m-top_medium">
+                <lightning-spinner alternative-text="Loading web connectors" size="small"></lightning-spinner>
+                <p class="slds-m-top_small">Loading web connectors...</p>
+            </div>
+        </template>
+
+        <template if:true={error}>
+            <div class="error-banner slds-m-top_medium">
+                <lightning-icon icon-name="utility:error" size="x-small" alternative-text="Error"></lightning-icon>
+                <span>{error}</span>
+            </div>
+        </template>
+
+        <template if:false={loading}>
+            <template if:false={error}>
+                <lightning-combobox
+                    label="Web Connector"
+                    placeholder="Select a web connector"
+                    value={selectedAppId}
+                    options={appOptions}
+                    onchange={handleAppChange}
+                    class="slds-m-top_medium">
+                </lightning-combobox>
+
+                <template if:true={saveError}>
+                    <div class="error-banner slds-m-top_small">
+                        <lightning-icon icon-name="utility:error" size="x-small" alternative-text="Error"></lightning-icon>
+                        <span>{saveError}</span>
+                    </div>
+                </template>
+
+                <div class="card-actions slds-m-top_large">
+                    <lightning-button label="Back" onclick={handleBack}></lightning-button>
+                    <div class="action-right">
+                        <lightning-button
+                            variant="brand"
+                            label={nextLabel}
+                            icon-name="utility:forward"
+                            icon-position="right"
+                            onclick={handleNext}
+                            disabled={isNextDisabled}>
+                        </lightning-button>
+                        <template if:true={saving}>
+                            <lightning-spinner alternative-text="Saving" size="small" class="slds-m-left_small"></lightning-spinner>
+                        </template>
+                    </div>
+                </div>
+            </template>
+        </template>
+    </div>
+</template>

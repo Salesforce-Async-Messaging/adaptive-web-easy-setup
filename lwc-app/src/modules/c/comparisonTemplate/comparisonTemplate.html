@@ -1,0 +1,36 @@
+<template>
+    <div class="comparison-template">
+        <template lwc:if={hasItems}>
+            <div class="comparison-grid">
+                <template for:each={displayItems} for:item="item">
+                    <div key={item.id} class="comparison-column">
+                        <template lwc:if={item.hasImage}>
+                            <div class="item-image-container">
+                                <img src={item.image} alt={item.name} />
+                            </div>
+                        </template>
+                        <div class="item-name">{item.name}</div>
+                        <template lwc:if={item.hasSku}>
+                            <div class="feature-row">
+                                <div class="feature-name">SKU</div>
+                                <div class="feature-value">{item.sku}</div>
+                            </div>
+                        </template>
+                        <template lwc:if={item.hasBrand}>
+                            <div class="feature-row">
+                                <div class="feature-name">Brand</div>
+                                <div class="feature-value">{item.brand}</div>
+                            </div>
+                        </template>
+                        <template lwc:if={item.hasPrice}>
+                            <div class="feature-row">
+                                <div class="feature-name">Price</div>
+                                <div class="feature-value">{item.formattedPrice}</div>
+                            </div>
+                        </template>
+                    </div>
+                </template>
+            </div>
+        </template>
+    </div>
+</template>

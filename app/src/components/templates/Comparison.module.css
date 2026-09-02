@@ -1,0 +1,52 @@
+.comparisonTemplate {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  font-family: "Source Sans Pro", sans-serif;
+}
+
+.comparisonGrid {
+  display: grid;
+  gap: 16px;
+  width: 100%;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.comparisonColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.featuresSection {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.featureRow {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px;
+  background: #f8f8f8;
+  border-radius: 4px;
+}
+
+.featureName {
+  font-size: 12px;
+  font-weight: 600;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+}
+
+.featureValue {
+  font-size: 14px;
+  font-weight: 400;
+  color: #333;
+  line-height: 1.4;
+}
+

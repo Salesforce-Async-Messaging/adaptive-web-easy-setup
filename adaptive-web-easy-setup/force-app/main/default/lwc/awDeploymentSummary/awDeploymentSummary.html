@@ -1,0 +1,148 @@
+<template>
+    <div class="summary-container">
+        <!-- Success Header -->
+        <div class="success-header">
+            <lightning-icon
+                icon-name="utility:success"
+                size="large"
+                variant="success"
+                class="success-icon"
+            ></lightning-icon>
+            <div class="success-content">
+                <h1 class="success-title">Deployment Complete!</h1>
+                <p class="success-description">
+                    Your Adaptive Web Easy Setup has been successfully deployed. All artifacts have been created and configured.
+                </p>
+            </div>
+        </div>
+
+        <!-- Created Artifacts Section -->
+        <div class="section">
+            <h2 class="section-title">Created Artifacts</h2>
+            <p class="section-description">
+                The following components have been created in your org. Click the links below to view them in Setup.
+            </p>
+
+            <div class="artifacts-grid">
+                <template for:each={artifacts} for:item="artifact">
+                    <div key={artifact.id} class="artifact-card">
+                        <lightning-icon
+                            icon-name={artifact.icon}
+                            size="small"
+                            class="artifact-icon"
+                        ></lightning-icon>
+                        <div class="artifact-content">
+                            <div class="artifact-label">{artifact.label}</div>
+                            <div class="artifact-value">{artifact.value}</div>
+                            <a href={artifact.setupPath} target="_blank" class="artifact-link">
+                                View in Setup →
+                            </a>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+
+        <!-- CDN Snippet Section -->
+        <div class="section">
+            <h2 class="section-title">CDN Snippet</h2>
+            <p class="section-description">
+                Copy this snippet and add it to your website's HTML to enable the Adaptive Web agent.
+            </p>
+
+            <div class="snippet-container">
+                <pre class="snippet-code">{cdnSnippet}</pre>
+                <lightning-button
+                    variant="brand"
+                    label={copiedSnippet}
+                    icon-name="utility:copy"
+                    onclick={handleCopySnippet}
+                    class="copy-button"
+                ></lightning-button>
+            </div>
+        </div>
+
+        <!-- Quick Actions Section -->
+        <div class="section">
+            <h2 class="section-title">Quick Actions</h2>
+            <div class="quick-actions">
+                <lightning-button
+                    variant="brand"
+                    label="Test in Messaging Preview"
+                    icon-name="utility:preview"
+                    onclick={handleOpenMessagingPreview}
+                ></lightning-button>
+                <lightning-button
+                    variant="neutral"
+                    label="Open Agent Studio"
+                    icon-name="standard:bot"
+                    onclick={handleOpenAgentStudio}
+                ></lightning-button>
+                <lightning-button
+                    variant="neutral"
+                    label="Open Data Cloud"
+                    icon-name="standard:data_streams"
+                    onclick={handleOpenDataCloud}
+                ></lightning-button>
+            </div>
+        </div>
+
+        <!-- Post-Deployment Checklist -->
+        <div class="section">
+            <h2 class="section-title">Post-Deployment Checklist</h2>
+            <p class="section-description">
+                Complete these steps to ensure your Adaptive Web agent is fully configured and ready for production.
+            </p>
+
+            <div class="checklist">
+                <template for:each={postDeploymentSteps} for:item="step">
+                    <div key={step.id} class="checklist-item">
+                        <lightning-input
+                            type="checkbox"
+                            label={step.label}
+                            checked={step.completed}
+                            class="checklist-checkbox"
+                        ></lightning-input>
+                    </div>
+                </template>
+            </div>
+        </div>
+
+        <!-- Success Metrics -->
+        <div class="section">
+            <h2 class="section-title">Deployment Summary</h2>
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-value">8</div>
+                    <div class="metric-label">Artifacts Created</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">✓</div>
+                    <div class="metric-label">Agent Activated</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">✓</div>
+                    <div class="metric-label">Permissions Assigned</div>
+                </div>
+                <div class="metric-card">
+                    <div class="metric-value">✓</div>
+                    <div class="metric-label">Ready to Test</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Navigation -->
+        <div class="summary-footer">
+            <lightning-button
+                variant="neutral"
+                label="Back"
+                onclick={handleBack}
+            ></lightning-button>
+            <lightning-button
+                variant="brand"
+                label="Finish"
+                onclick={handleFinish}
+            ></lightning-button>
+        </div>
+    </div>
+</template>

@@ -1,0 +1,11 @@
+<apex:page showHeader="false" sidebar="false" standardStylesheets="false" applyHtmlTag="false">
+<script>
+(function() {
+    var sessionId = '{!$Api.Session_ID}';
+    window.parent.postMessage(
+        { type: 'sf_session', sessionId: sessionId },
+        '*'
+    );
+})();
+</script>
+</apex:page>

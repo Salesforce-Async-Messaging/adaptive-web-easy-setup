@@ -1,0 +1,15 @@
+.app {
+  position: fixed !important;
+  bottom: 0px !important;
+  width: 100% !important;
+  z-index: 2147483647 !important;
+  font-family: "Source Sans Pro", sans-serif !important;
+  display: flex;
+  flex-direction: column;
+  background: white;
+}
+
+.conversation-container {
+  display: flex;
+  flex-direction: row;
+}

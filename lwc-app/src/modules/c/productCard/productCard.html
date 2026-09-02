@@ -1,0 +1,14 @@
+<template>
+    <div class="product-card">
+        <div class="product-image-container">
+            <img src={productImage} alt={productName} class="product-image" />
+        </div>
+        <div class="product-info">
+            <h3 class="product-name">{productName}</h3>
+            <div class="product-price">{productPrice}</div>
+            <template lwc:if={hasRating}>
+                <c-product-stars rating={productRating}></c-product-stars>
+            </template>
+        </div>
+    </div>
+</template>

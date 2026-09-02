@@ -1,0 +1,16 @@
+node_modules/
+dist/
+*.log
+.env
+.DS_Store
+config.local.json
+.session-data/
+tests/integration/test-config.json
+.idea/
+.windsurf/
+.gus/
+.sf/
+tmp/
+
+# Backups created by scripts/configure-org-urls.sh
+scripts/.url-backups/

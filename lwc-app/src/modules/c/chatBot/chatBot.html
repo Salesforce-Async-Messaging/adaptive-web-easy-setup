@@ -1,0 +1,87 @@
+<template>
+    <template lwc:if={show}>
+        <div class="chatbot-container">
+            <div class="messages-container">
+                <template for:each={filteredEntries} for:item="entry">
+                    <div key={entry.id} class={entry.messageClass}>
+                        <!-- Agent logo for bot messages -->
+                        <template lwc:if={entry.isFromBot}>
+                            <div class="agent-logo">
+                                <img src={AGENT_LOGO_IMAGE_URL} alt="Agent Logo" />
+                            </div>
+                        </template>
+                        
+                        <div class="message-wrapper">
+                            <div class="message-content">
+                                <div class="message-text">{entry.text}</div>
+                            </div>
+
+                            <template lwc:if={entry.hasOptions}>
+                                <div class="message-choices">
+                                    <template for:each={entry.options} for:item="option">
+                                        <button
+                                            key={option.name}
+                                            class="choice-button"
+                                            data-option={option.name}
+                                            onclick={handleChoiceSelection}
+                                        >
+                                            {option.name}
+                                        </button>
+                                    </template>
+                                </div>
+                            </template>
+
+                            <template lwc:if={entry.timestamp}>
+                                <div class="message-timestamp">
+                                    {entry.timestampLabel}
+                                </div>
+                            </template>
+                        </div>
+                    </div>
+                </template>
+                
+                <!-- Typing indicator -->
+                <template lwc:if={isAnotherParticipantTyping}>
+                    <div class="message message-bot">
+                        <div class="agent-logo">
+                            <img src={AGENT_LOGO_IMAGE_URL} alt="Agent Logo" />
+                        </div>
+                        <div class="message-wrapper">
+                            <div class="message-content">
+                                <div class="typing-indicator">
+                                    <span></span>
+                                    <span></span>
+                                    <span></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+
+            <form onsubmit={handleSendMessage} class="message-input-form">
+                <div class="message-input-container">
+                    <div class="input-row">
+                        <div class="textarea-container">
+                            <textarea
+                                oninput={handleInputChange}
+                                onkeydown={handleKeyPress}
+                                placeholder="What can I help with today?"
+                                class="message-input"
+                                rows="1"
+                            >{inputText}</textarea>
+                        </div>
+                        <button type="submit" class="send-button" title="Send message">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 18 18" fill="none">
+                                <path d="M3 9L15 9M15 9L10 4M15 9L10 14" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </form>
+            <div class="powered-by">
+                Powered by <span class="powered-by-brand">Agentforce</span>
+            </div>
+        </div>
+    </template>
+</template>

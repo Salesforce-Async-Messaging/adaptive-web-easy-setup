@@ -1,0 +1,23 @@
+{
+  "orgName": "Adaptive Web 264 Test",
+  "description": "Test org for Enhanced Easy Setup Agent with Knowledge + Citations",
+  "edition": "Developer",
+  "features": [
+    "EinsteinAgentEnabled",
+    "ServiceCloud",
+    "Communities",
+    "PersonalizationOrb"
+  ],
+  "settings": {
+    "lightningExperienceSettings": {
+      "enableS1DesktopEnabled": true
+    },
+    "mobileSettings": {
+      "enableS1EncryptedStoragePref2": false
+    },
+    "communitiesSettings": {
+      "enableNetworksEnabled": true
+    }
+  },
+  "hasSampleData": false
+}

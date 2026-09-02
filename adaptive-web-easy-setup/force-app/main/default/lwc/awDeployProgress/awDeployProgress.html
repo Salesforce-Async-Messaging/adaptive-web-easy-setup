@@ -1,0 +1,56 @@
+<template>
+    <div class="content-card">
+        <div class="card-header">
+            <div class="card-icon">
+                <lightning-icon icon-name="utility:setup" alternative-text="Deploy" size="medium"></lightning-icon>
+            </div>
+            <div>
+                <h1 class="card-title">Setting Up Adaptive Web</h1>
+                <p class="card-subtitle">{statusMessage}</p>
+            </div>
+            <template if:true={isRunning}>
+                <lightning-spinner alternative-text="Deploying" size="small" class="slds-m-left_auto"></lightning-spinner>
+            </template>
+        </div>
+
+        <!-- Summary of selections -->
+        <div class="summary-row slds-m-top_medium">
+            <div class="summary-item">
+                <span class="summary-label">Web Connector</span>
+                <span class="summary-value">{selectedSitemap.name}</span>
+            </div>
+            <div class="summary-item">
+                <span class="summary-label">Deployment</span>
+                <span class="summary-value">{selectedDeployment.label}</span>
+            </div>
+        </div>
+
+        <!-- Step list -->
+        <div class="step-list slds-m-top_large">
+            <template for:each={steps} for:item="step">
+                <div key={step.name} class={step.stepClass}>
+                    <lightning-icon
+                        icon-name={step.icon}
+                        variant={step.iconVariant}
+                        size="x-small"
+                        alternative-text={step.status}>
+                    </lightning-icon>
+                    <span class="step-label">{step.label}</span>
+                </div>
+            </template>
+        </div>
+
+        <!-- Error state -->
+        <template if:true={isFailed}>
+            <div class="error-banner slds-m-top_medium">
+                <lightning-icon icon-name="utility:error" size="x-small" alternative-text="Error"></lightning-icon>
+                <span>{errorMessage}</span>
+            </div>
+        </template>
+
+        <div class="card-actions slds-m-top_large">
+            <lightning-button label="Back" onclick={handleBack}></lightning-button>
+            <div class="action-right"></div>
+        </div>
+    </div>
+</template>

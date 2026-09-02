@@ -1,0 +1,59 @@
+<template>
+    <div class="scroll-content">
+        <!-- Personalization Setup -->
+        <div class="setup-section">
+            <h1 class="section-heading">Verify Your Personalization Configuration</h1>
+            <p class="section-description">Adaptive Web setup leverages personalization objects like
+                personalization points and recommenders to power recommendations. Personalization points
+                must include descriptions so the agent can identify the correct one to display.
+                <a class="section-link" onclick={handleOpenSetup}> Open Personalization Setup </a>
+                to verify these are deployed in your org. If they aren't set up yet, deploy them from the
+                Use Case Setup tab using data kits.
+            </p>
+
+            <template if:true={loading}>
+                <div class="loading-state">
+                    <lightning-spinner alternative-text="Loading..." size="small"></lightning-spinner>
+                </div>
+            </template>
+
+            <template if:true={error}>
+                <div class="error-banner">
+                    <lightning-icon icon-name="utility:error" size="x-small" alternative-text="Error"></lightning-icon>
+                    <span>{error}</span>
+                </div>
+            </template>
+
+            <template if:false={loading}>
+                <template if:false={error}>
+                    <div class="visual-picker" onclick={handleOpenSetup}>
+                        <div class="picker-icon-container">
+                            <lightning-icon icon-name="standard:settings" alternative-text="Settings" size="small"></lightning-icon>
+                        </div>
+                        <div class="picker-text">
+                            <p class="picker-title">{cardTitle}</p>
+                            <p class="picker-description">{cardDescription}</p>
+                        </div>
+                    </div>
+                </template>
+            </template>
+        </div>
+
+        <!-- Data Cloud Configuration -->
+        <div class="setup-section">
+            <h1 class="section-heading">Data Cloud Configuration</h1>
+            <p class="section-description">Before continuing, please visit the Salesforce
+                <a class="section-link" onclick={handleOpenSetup}> Personalization Setup </a>
+                page to ensure your org is properly configured.
+            </p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="setup-footer">
+        <div class="footer-left"></div>
+        <div class="footer-right">
+            <lightning-button variant="brand" label="Continue" onclick={handleNext} disabled={isNextDisabled}></lightning-button>
+        </div>
+    </div>
+</template>

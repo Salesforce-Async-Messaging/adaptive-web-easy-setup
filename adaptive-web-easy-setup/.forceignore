@@ -1,0 +1,18 @@
+# Ignore Node.js / MCP server files from Salesforce deployments
+node_modules/
+dist/
+src/
+tests/
+scripts/
+*.ts
+*.js
+*.json
+!force-app/**
+!sfdx-project.json
+
+# Ignore org-specific Data Cloud artifacts from storm org
+force-app/main/default/dataConnectorIngestApis/
+force-app/main/default/dataSourceTenants/
+force-app/main/default/dataStreamDefinitions/
+force-app/main/default/mktDataSources/
+force-app/main/default/streamingAppDataConnectors/

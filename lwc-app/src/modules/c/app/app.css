@@ -1,0 +1,56 @@
+.app {
+    font-family: 'Salesforce Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 999999;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.app > * {
+    pointer-events: auto;
+}
+
+.conversation-wrapper {
+    width: 100%;
+    max-width: 1400px;
+    min-width: 600px;
+    display: flex;
+    flex-direction: column;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
+}
+
+.conversation-wrapper-hidden {
+    display: none;
+}
+
+.conversation-container {
+    display: flex;
+    flex-direction: row;
+    gap: 0;
+    padding: 0;
+    background: #D8EDFF;
+    height: 75vh;
+    max-height: 75vh;
+    overflow: hidden;
+}
+
+@media (max-width: 768px) {
+    .conversation-container {
+        flex-direction: column;
+        max-height: 80vh;
+    }
+
+    .conversation-wrapper {
+        width: 95%;
+        min-width: auto;
+    }
+}

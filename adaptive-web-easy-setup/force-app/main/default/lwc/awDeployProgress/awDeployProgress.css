@@ -1,0 +1,82 @@
+.summary-row {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    background: #f3f2f2;
+    border-radius: 8px;
+    padding: 0.875rem 1rem;
+}
+
+.summary-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.summary-label {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: #706e6b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.summary-value {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #181818;
+}
+
+.step-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.step-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.625rem 0.875rem;
+    border-radius: 6px;
+    border: 1px solid #e4e4e4;
+    background: #fff;
+}
+
+.step-item.step-completed { border-color: #04844b; background: #f3fff6; }
+.step-item.step-running   { border-color: #0176d3; background: #e8f4ff; }
+.step-item.step-failed    { border-color: #ba0517; background: #fef0f0; }
+
+.step-label {
+    flex: 1;
+    font-size: 0.875rem;
+    color: #181818;
+}
+
+.step-item.step-pending .step-label {
+    color: #706e6b;
+}
+
+.step-message {
+    font-size: 0.8125rem;
+    color: #0176d3;
+    font-style: italic;
+}
+
+.step-spinner {
+    flex-shrink: 0;
+}
+
+.card-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+.action-right {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: nowrap;
+}

@@ -1,0 +1,30 @@
+<template>
+    <template lwc:if={hasItem}>
+        <div class="product-details-template">
+            <div class="product-details-container">
+                <template lwc:if={hasImage}>
+                    <div class="product-image-section">
+                        <div class="product-image-container">
+                            <img src={itemImage} alt={itemName} />
+                        </div>
+                    </div>
+                </template>
+                <div class="product-info-section">
+                    <h1 class="product-name">{itemName}</h1>
+                    <template lwc:if={hasSku}>
+                        <div class="item-sku">SKU: {itemSku}</div>
+                    </template>
+                    <template lwc:if={hasPrice}>
+                        <div class="product-price">{formattedPrice}</div>
+                    </template>
+                    <template lwc:if={hasBrand}>
+                        <div class="product-brand">
+                            <span class="feature-name">Brand:</span>
+                            <span class="feature-value">{itemBrand}</span>
+                        </div>
+                    </template>
+                </div>
+            </div>
+        </div>
+    </template>
+</template>

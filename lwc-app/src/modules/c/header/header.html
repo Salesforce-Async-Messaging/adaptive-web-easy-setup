@@ -1,0 +1,29 @@
+<template>
+    <template lwc:if={show}>
+        <div class="header">
+            <div class="header-left">
+                <div class="agent-info">
+                    <img src={AGENT_LOGO_IMAGE_URL} alt="Agent Logo" class="agent-logo" />
+                    <span class="agent-name">Adaptive Web Agent</span>
+                </div>
+            </div>
+            <div class="header-right">
+                <button class="header-button" onclick={handleNewConversation} title="New Conversation">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 5v14M5 12h14"/>
+                    </svg>
+                </button>
+                <button class="header-button" onclick={handleMinimize} title="Minimize">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M6 9l6 6 6-6"/>
+                    </svg>
+                </button>
+                <button class="header-button" onclick={handleCloseConversation} title="Close Conversation">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 6L6 18M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </template>
+</template>

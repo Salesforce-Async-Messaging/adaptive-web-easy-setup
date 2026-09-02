@@ -1,0 +1,47 @@
+.headerContainer {
+  display: flex;
+  align-items: center;
+  position: relative;
+  width: 100vw;
+  height: 70px;
+  padding: 0 30px;
+  background-color: #393939;
+}
+
+.agentName {
+  color: white;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 400;
+  text-transform: uppercase;
+}
+
+.endConversationButton {
+  position: absolute;
+  right: 80px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: #097fb3;
+  border: none;
+  padding: 8px 16px;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 14px;
+  color: white;
+  transition: all 0.2s ease;
+}
+
+.endConversationButton:hover {
+  background-color: #076a94;
+}
+
+.minimizeButton {
+  position: absolute;
+  right: 32px;
+  top: 50%;
+  color: white;
+  cursor: pointer;
+  transform: translateY(-50%);
+  border: none;
+  display: flex;
+}

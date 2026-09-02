@@ -1,0 +1,114 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+}
+
+/* ── Scrollable content area ─────────────────────────────────────── */
+.scroll-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 43px 32px 32px;
+    background: #fff;
+}
+
+/* ── Section blocks ─────────────────────────────────────────────── */
+.setup-section {
+    margin-bottom: 24px;
+}
+
+.section-heading {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #181818;
+    margin: 0 0 8px;
+    line-height: 1.35;
+}
+
+.section-description {
+    font-size: 1rem;
+    color: #181818;
+    margin: 0 0 16px;
+    line-height: 1.4;
+}
+
+/* ── Step list ──────────────────────────────────────────────────── */
+.steps-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 16px;
+}
+
+.step-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.625rem 0.875rem;
+    border-radius: 6px;
+    border: 1px solid #c9c9c9;
+    background: #fff;
+}
+
+.step-item.step-completed { border-color: #04844b; background: #f3fff6; }
+.step-item.step-running   { border-color: #0176d3; background: #e8f4ff; }
+.step-item.step-failed    { border-color: #ba0517; background: #fef0f0; }
+
+.step-label {
+    flex: 1;
+    font-size: 0.875rem;
+    color: #181818;
+}
+
+.step-item.step-pending .step-label {
+    color: #706e6b;
+}
+
+/* ── CSS-only spinner for running steps ──────────────────────────── */
+.css-spinner {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+    border: 2px solid #b4d8f8;
+    border-top-color: #0176d3;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* ── Banners ────────────────────────────────────────────────────── */
+.error-banner {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    background: #fef0f0;
+    border: 1px solid #ba0517;
+    border-radius: 6px;
+    padding: 0.625rem 0.875rem;
+    font-size: 0.875rem;
+    color: #ba0517;
+    margin-bottom: 1rem;
+}
+
+/* ── Footer ─────────────────────────────────────────────────────── */
+.setup-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 28px;
+    border-top: 1px solid #c9c9c9;
+    background: #fff;
+    flex-shrink: 0;
+}
+
+.footer-left,
+.footer-right {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}

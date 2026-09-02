@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adaptive Web Test</title>
+    <script src="../dist/lwc-sdk-output.js"></script>
+    <script>
+        window.addControllerToPage()
+        window.addAppToPage()
+        window.AdaptiveWebsite.initialize({
+            organizationId: "00DHu00000sTjID",
+            messagingUrl: "https://storm-d759b260ae0825.my.salesforce-scrt.com",
+            deploymentDeveloperName: "Personalization_Router_Deployment"
+        })
+    </script>
+</head>
+<body>
+    <div id="app"></div>
+</body>
+</html>

@@ -1,0 +1,28 @@
+{
+  "name": "adaptive-web-controller",
+  "version": "0.0.0",
+  "description": "A library that interfaces with the Enhanced Web Chat API for use in Adaptive Web Components",
+  "main": "dist/adaptive-web-controller.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "adaptive-web-controller.js"
+  ],
+  "scripts": {
+    "build": "tsc && vite build"
+  },
+  "author": "salesforce.com, inc",
+  "license": "UNLICENSED",
+  "dependencies": {
+    "event-source-polyfill": "^1.0.31"
+  },
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^29.0.0",
+    "@rollup/plugin-node-resolve": "^16.0.3",
+    "@types/event-source-polyfill": "^1.0.5",
+    "rollup-plugin-esbuild": "^6.2.1",
+    "typescript": "^5.9.3",
+    "vite": "^7.3.5"
+  },
+  "bundleDependencies": false
+}

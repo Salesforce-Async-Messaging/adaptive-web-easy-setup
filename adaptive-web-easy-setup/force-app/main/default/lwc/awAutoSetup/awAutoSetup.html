@@ -1,0 +1,54 @@
+<template>
+    <div class="scroll-content">
+        <div class="setup-section">
+            <h1 class="section-heading">Configure Adaptive Web</h1>
+            <p class="section-description">{statusMessage}</p>
+        </div>
+
+        <!-- Step list -->
+        <div class="steps-list">
+            <template for:each={visibleSteps} for:item="step">
+                <div key={step.name} class={step.stepClass}>
+                    <template if:true={step.isRunning}>
+                        <span class="css-spinner" role="status">
+                            <span class="slds-assistive-text">In Progress</span>
+                        </span>
+                    </template>
+                    <template if:false={step.isRunning}>
+                        <lightning-icon
+                            icon-name={step.icon}
+                            variant={step.iconVariant}
+                            size="x-small"
+                            alternative-text={step.status}>
+                        </lightning-icon>
+                    </template>
+                    <span class="step-label">{step.label}</span>
+                </div>
+            </template>
+        </div>
+
+        <!-- Error state -->
+        <template if:true={isFailed}>
+            <div class="error-banner">
+                <lightning-icon icon-name="utility:error" size="x-small" alternative-text="Error"></lightning-icon>
+                <span>{errorMessage}</span>
+            </div>
+        </template>
+    </div>
+
+    <!-- Footer -->
+    <div class="setup-footer">
+        <div class="footer-left">
+            <lightning-button variant="neutral" label="Back" onclick={handleBack}></lightning-button>
+        </div>
+        <div class="footer-right">
+            <template if:true={isComplete}>
+                <lightning-button
+                    label="Continue"
+                    variant="brand"
+                    onclick={handleNext}>
+                </lightning-button>
+            </template>
+        </div>
+    </div>
+</template>

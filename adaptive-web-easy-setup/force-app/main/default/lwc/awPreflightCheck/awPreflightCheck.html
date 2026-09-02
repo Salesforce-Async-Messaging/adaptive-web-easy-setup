@@ -1,0 +1,106 @@
+<template>
+    <div class="preflight-container">
+        <div class="slds-text-heading_medium slds-m-bottom_medium">
+            Prerequisites Check
+        </div>
+
+        <div class="slds-text-body_regular slds-m-bottom_large">
+            Before proceeding with the Adaptive Web Easy Setup wizard, we'll verify that all required Salesforce features are enabled in your org.
+        </div>
+
+        <!-- Run Checks Button -->
+        <div class="slds-m-bottom_large">
+            <lightning-button
+                variant="brand"
+                label={checkButtonLabel}
+                onclick={handleRunChecks}
+                disabled={checking}
+                icon-name="utility:refresh"
+            ></lightning-button>
+        </div>
+
+        <!-- Error Message -->
+        <template if:true={errorMessage}>
+            <div class="slds-box slds-theme_error slds-m-bottom_medium">
+                <div class="slds-text-heading_small">Error</div>
+                <div class="slds-m-top_x-small">{errorMessage}</div>
+            </div>
+        </template>
+
+        <!-- Checks List -->
+        <template if:true={hasChecks}>
+            <div class="checks-list slds-m-bottom_large">
+                <template for:each={checksDisplay} for:item="check">
+                    <div key={check.name} class={check.statusClass}>
+                        <div class="check-header">
+                            <lightning-icon
+                                icon-name={check.iconName}
+                                variant={check.iconVariant}
+                                size="small"
+                                class="check-icon"
+                            ></lightning-icon>
+                            <div class="check-label">{check.label}</div>
+                            <lightning-badge
+                                label={check.severityBadge}
+                                class={check.severityClass}
+                            ></lightning-badge>
+                        </div>
+                        <div class="check-message slds-m-top_xx-small">
+                            {check.message}
+                        </div>
+                        <template if:false={check.passed}>
+                            <template if:true={check.setupPath}>
+                                <div class="setup-path slds-m-top_xx-small">
+                                    <lightning-icon
+                                        icon-name="utility:info"
+                                        size="x-small"
+                                        class="setup-icon"
+                                    ></lightning-icon>
+                                    <span class="setup-text">{check.setupPath}</span>
+                                </div>
+                            </template>
+                        </template>
+                    </div>
+                </template>
+            </div>
+
+            <!-- Summary -->
+            <template if:true={checksComplete}>
+                <div class={allPassed}>
+                    <lightning-icon
+                        icon-name={allPassed}
+                        size="small"
+                        class="summary-icon"
+                    ></lightning-icon>
+                    <div class="summary-message">{summaryMessage}</div>
+                </div>
+            </template>
+        </template>
+
+        <!-- Loading Spinner -->
+        <template if:true={checking}>
+            <div class="slds-is-relative slds-m-vertical_large" style="height: 100px;">
+                <lightning-spinner
+                    alternative-text="Running checks..."
+                    size="medium"
+                ></lightning-spinner>
+            </div>
+        </template>
+
+        <!-- Navigation Buttons -->
+        <template if:true={checksComplete}>
+            <div class="slds-m-top_large slds-grid slds-grid_align-spread">
+                <lightning-button
+                    label="Back"
+                    onclick={handleBack}
+                ></lightning-button>
+                <lightning-button
+                    variant="brand"
+                    label="Continue"
+                    onclick={handleNext}
+                    disabled={canProceed}
+                ></lightning-button>
+            </div>
+        </template>
+    </div>
+</template>

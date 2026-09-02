@@ -1,0 +1,53 @@
+.recsTemplate {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 24px;
+  font-family: "Source Sans Pro", sans-serif;
+}
+
+.recsBanner {
+  width: 100%;
+  height: 250px;
+  overflow: hidden;
+}
+
+.recsBanner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.recsProductsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  width: 100%;
+}
+
+.compareButtonContainer {
+  position: absolute;
+  bottom: 0px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.compareButton {
+  background-color: #097fb3;
+  color: white;
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+  border: none;
+}
+
+.compareButton:hover {
+  background-color: #076a94;
+}
+
+.compareButton:active {
+  background-color: #055a7a;
+}

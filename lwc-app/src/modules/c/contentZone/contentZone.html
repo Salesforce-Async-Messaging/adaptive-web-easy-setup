@@ -1,0 +1,23 @@
+<template>
+    <template lwc:if={show}>
+        <div class="content-zone-container">
+            <div class="content-zone-content">
+                <template lwc:if={showRecs}>
+                    <c-recs-template items={itemsJson}></c-recs-template>
+                </template>
+                <template lwc:elseif={showComparison}>
+                    <c-comparison-template items={itemsJson}></c-comparison-template>
+                </template>
+                <template lwc:elseif={showProductDetails}>
+                    <c-product-details-template item={firstItemJson}></c-product-details-template>
+                </template>
+                <template lwc:elseif={showJsonViewer}>
+                    <c-json-viewer content={contentJson}></c-json-viewer>
+                </template>
+                <template lwc:else>
+                    <c-placeholder></c-placeholder>
+                </template>
+            </div>
+        </div>
+    </template>
+</template>

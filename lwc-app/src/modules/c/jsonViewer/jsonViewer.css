@@ -1,0 +1,81 @@
+.json-viewer-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background: #1e1e1e;
+    border-radius: 8px;
+    overflow: hidden;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
+}
+
+.json-viewer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    background: #2d2d2d;
+    border-bottom: 1px solid #3d3d3d;
+}
+
+.json-viewer-title {
+    color: #e0e0e0;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.copy-button {
+    background: transparent;
+    border: 1px solid #555;
+    border-radius: 4px;
+    padding: 6px 8px;
+    cursor: pointer;
+    color: #aaa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.copy-button:hover {
+    background: #3d3d3d;
+    color: #fff;
+    border-color: #666;
+}
+
+.json-viewer-content {
+    flex: 1;
+    overflow: auto;
+    padding: 16px;
+}
+
+.json-code {
+    margin: 0;
+    color: #9cdcfe;
+    font-size: 13px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.json-code code {
+    font-family: inherit;
+}
+
+/* Scrollbar styling */
+.json-viewer-content::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.json-viewer-content::-webkit-scrollbar-track {
+    background: #1e1e1e;
+}
+
+.json-viewer-content::-webkit-scrollbar-thumb {
+    background: #555;
+    border-radius: 4px;
+}
+
+.json-viewer-content::-webkit-scrollbar-thumb:hover {
+    background: #666;
+}

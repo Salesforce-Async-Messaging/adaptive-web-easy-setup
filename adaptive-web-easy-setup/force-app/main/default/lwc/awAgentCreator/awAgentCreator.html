@@ -1,0 +1,117 @@
+<template>
+    <div class="scroll-content">
+        <div class="setup-section">
+            <h1 class="section-heading">Create Agent</h1>
+            <p class="section-description">This step adds a prompt template, a subagent, and an agent action to your org - the building blocks for your Adaptive Web platform.</p>
+        </div>
+
+        <!-- Base Name Input -->
+        <template if:false={creating}>
+            <div class="input-section">
+                <lightning-input
+                    label="Base Name (Optional)"
+                    placeholder="AdaptiveWeb"
+                    value={baseName}
+                    onchange={handleBaseNameChange}
+                    pattern="[a-zA-Z0-9_]+"
+                    message-when-pattern-mismatch="Only letters, numbers, and underscores allowed"
+                    max-length="40"
+                    field-level-help="Customize the name for your agent and related artifacts. Leave blank to use default 'AdaptiveWeb'. A unique ID will be appended automatically.">
+                </lightning-input>
+                <template if:true={baseNamePreview}>
+                    <div class="name-preview">
+                        <span class="preview-label">Agent will be named:</span>
+                        <span class="preview-value">{baseNamePreview}</span>
+                    </div>
+                </template>
+            </div>
+        </template>
+
+        <template if:true={error}>
+            <div class="error-banner">
+                <lightning-icon icon-name="utility:error" size="x-small" alternative-text="Error"></lightning-icon>
+                <span class="error-text">{error}</span>
+            </div>
+
+            <!-- Continue/Cleanup buttons on error -->
+            <template if:true={hasFailedDeployment}>
+                <div class="error-actions">
+                    <template if:true={canContinue}>
+                        <lightning-button
+                            variant="brand"
+                            label="🔄 Continue from Failed Step"
+                            onclick={handleContinue}
+                            disabled={creating}
+                            title="Retry from the step that failed">
+                        </lightning-button>
+                    </template>
+                    <template if:true={canCleanup}>
+                        <lightning-button
+                            variant="destructive"
+                            label="🧹 Cleanup & Start Over"
+                            onclick={handleCleanup}
+                            disabled={creating}
+                            title="Remove partial artifacts and start fresh">
+                        </lightning-button>
+                    </template>
+                </div>
+            </template>
+        </template>
+
+        <!-- Step progress -->
+        <template if:true={hasSteps}>
+            <div class="steps-list">
+                <template for:each={stepsDisplay} for:item="step">
+                    <div key={step.name} class={step.rowClass}>
+                        <template if:true={step.isRunning}>
+                            <span class="css-spinner" role="status">
+                                <span class="slds-assistive-text">In Progress</span>
+                            </span>
+                        </template>
+                        <template if:false={step.isRunning}>
+                            <lightning-icon
+                                icon-name={step.iconName}
+                                variant={step.iconVariant}
+                                size="x-small"
+                                alternative-text={step.statusLabel}>
+                            </lightning-icon>
+                        </template>
+                        <span class="step-label">{step.label}</span>
+                    </div>
+                </template>
+            </div>
+        </template>
+
+        <!-- Success result -->
+        <template if:true={isDone}>
+            <div class="success-banner">
+                <lightning-icon icon-name="utility:check" variant="success" size="x-small" alternative-text="Success"></lightning-icon>
+                <span>Agent created. Ready to configure Adaptive Web.</span>
+            </div>
+        </template>
+    </div>
+
+    <!-- Footer -->
+    <div class="setup-footer">
+        <div class="footer-left">
+            <lightning-button variant="neutral" label="Back" onclick={handleBack}></lightning-button>
+        </div>
+        <div class="footer-right">
+            <template if:false={isDone}>
+                <lightning-button
+                    variant="brand"
+                    label={createLabel}
+                    onclick={handleCreate}
+                    disabled={isCreateDisabled}>
+                </lightning-button>
+            </template>
+            <template if:true={isDone}>
+                <lightning-button
+                    variant="brand"
+                    label="Continue"
+                    onclick={handleNext}>
+                </lightning-button>
+            </template>
+        </div>
+    </div>
+</template>
